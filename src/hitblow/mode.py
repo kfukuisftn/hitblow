@@ -9,7 +9,7 @@ def select_game_mode():
     print("\nゲームモードを選んでください：")
     print("1: 通常モード     (制限なしでじっくりプレイ)")
     print("2: 回数制限モード (指定された回数内で挑戦)")
-    print("3: 時間制限モード (別班実装のタイマー機能)")
+    print("3: 時間制限モード (タイマー機能)")
     
     while True:
         choice = input("選択 (1-3) > ").strip()
@@ -22,3 +22,23 @@ def select_game_mode():
             return "time"
         else:
             print("1, 2, 3 のいずれかを入力してください。")
+
+import time
+
+def select_time_limit():
+    """制限時間を選択させる"""
+
+    while True:
+        try:
+            limit = int(input("制限時間（秒）を入力してください > "))
+            if limit > 0:
+                return limit
+            print("1以上を入力してください。")
+        except ValueError:
+            print("数字を入力してください。")
+
+def is_time_over(start_time, limit):
+    """制限時間を超えたか判定する"""
+
+    elapsed = time.time() - start_time
+    return elapsed >= limit

@@ -29,8 +29,12 @@ def play(digits=3):
         max_tries = select_difficulty()
     elif game_mode == "time":
         print("【時間制限モード】で開始します。")
-        # TODO: 別班がここに時間制限用の初期化処理（開始時刻の保持など）を記述する
-        pass
+
+    from .mode import select_time_limit
+    import time
+
+    time_limit = select_time_limit()
+    start_time = time.time()
     # 通常モード（normal）の場合は初期値のままで何もしない
 
     tries = 0
@@ -42,7 +46,13 @@ def play(digits=3):
         #      if guess == "h":
         #          print(hint(secret)); continue
 
-        # TODO: 別班がここに時間切れ判定を記述する
+        from .mode import is_time_over
+
+        if game_mode == "time":
+            if is_time_over(start_time, time_limit):
+                print("時間切れ！")
+                print(f"答えは {secret} でした")
+                break
 
         if len(guess) != digits or not guess.isdigit():
             print(f"{digits} 桁の数字で入力してね")
