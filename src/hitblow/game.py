@@ -14,6 +14,28 @@ def play(digits=3):
     print(f"Hit & Blow（{digits} 桁・重複なし）")
 
     # ===== ① 開始時に足す（難易度・あいさつ など）: ここに書く =====
+    from .mode import select_game_mode
+    from .ternlimit import select_difficulty
+
+    # 1. ゲームモード（通常 vs 回数制限 vs 時間制限）を選択
+    game_mode = select_game_mode()
+    
+    # 2. 変数の初期化
+    max_tries = float("inf")
+    
+    # 3. モードに応じた処理の分岐
+    if game_mode == "count":
+        # 回数制限が選ばれたら、続けて難易度を選択
+        max_tries = select_difficulty()
+    elif game_mode == "time":
+        print("【時間制限モード】で開始します。")
+
+    from .mode import select_time_limit
+    import time
+
+    time_limit = select_time_limit()
+    start_time = time.time()
+    # 通常モード（normal）の場合は初期値のままで何もしない
 
     tries = 0
     while True:
@@ -23,6 +45,14 @@ def play(digits=3):
         # 例:  from .hint import hint
         #      if guess == "h":
         #          print(hint(secret)); continue
+
+        from .mode import is_time_over
+
+        if game_mode == "time":
+            if is_time_over(start_time, time_limit):
+                print("時間切れ！")
+                print(f"答えは {secret} でした")
+                break
 
         if len(guess) != digits or not guess.isdigit():
             print(f"{digits} 桁の数字で入力してね")
@@ -40,3 +70,5 @@ def play(digits=3):
             print(f"正解！ {tries} 回で当たり（答え {secret}）")
             print(f"あなたのスコア：{score} 点")
             break
+
+        
