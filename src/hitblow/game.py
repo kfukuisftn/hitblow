@@ -30,11 +30,15 @@ def play(digits=3):
     elif game_mode == "time":
         print("【時間制限モード】で開始します。")
 
-    from .mode import select_time_limit
     import time
 
-    time_limit = select_time_limit()
-    start_time = time.time()
+    time_limit = None
+    start_time = None
+
+    if game_mode == "time":
+        from .mode import select_time_limit
+        time_limit = select_time_limit()
+        start_time = time.time()
     # 通常モード（normal）の場合は初期値のままで何もしない
 
     tries = 0
@@ -50,6 +54,9 @@ def play(digits=3):
 
         if game_mode == "time":
             if is_time_over(start_time, time_limit):
+                from .asciiart import lose_art
+
+                lose_art()
                 print("時間切れ！")
                 print(f"答えは {secret} でした")
                 break
@@ -64,11 +71,21 @@ def play(digits=3):
 
             # ===== ③ 勝利時に足す（スコア・履歴 など）: ここに書く =====
             from .score import calculate_score
-
+            from .asciiart import win_art
+    
             score = calculate_score(tries)
 
             print(f"正解！ {tries} 回で当たり（答え {secret}）")
+            win_art()
             print(f"あなたのスコア：{score} 点")
+            break
+
+        if game_mode == "count" and tries >= max_tries:
+            from .asciiart import lose_art
+
+            lose_art()
+            print(f"ゲームオーバー！ {max_tries} 回以内に当てられませんでした。")
+            print(f"答えは {secret} でした")
             break
 
         
